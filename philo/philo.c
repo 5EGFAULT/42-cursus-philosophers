@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 	sim = init_sim(argc, argv);
 	if (!sim)
 		return (printf("philo malloc error.\n"), 3);
-	start_sim(sim);	
+	start_sim(sim);
 	free_sim(sim);
 	return (0);
 }

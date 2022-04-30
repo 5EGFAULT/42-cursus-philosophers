@@ -16,7 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
-
+# include <sys/time.h>
 typedef enum e_state
 {
 	NONE,
@@ -45,6 +45,8 @@ typedef struct s_simululation
 	int 			dead_philo;
 	int 			*forks;
 	pthread_mutex_t fork_lock;
+	struct timeval	tv;
+	struct timezone	tz;
 	t_philo 		*philos;
 }t_simululation;
 
@@ -55,11 +57,15 @@ typedef struct s_arg
 }t_arg;
 
 int	ft_atoi(const char *str);
-t_philo			*init_philo(int nbr_philo);
+t_philo			*init_philo(int nbr_philo, t_simululation *sim);
 t_simululation	*init_sim(int argc, char **argv);
 void			free_sim(t_simululation *sim);
 void			init_mutex(t_simululation *sim);
 void			start_sim(t_simululation *sim);
 void			*run_philo(void *arg);
+
+void			philo_eat(t_philo *philo, t_simululation *sim, int *b);
+void			philo_think(t_philo *philo, t_simululation *sim, int *b);
+void			philo_sleep(t_philo *philo, t_simululation *sim, int *b);
 
 #endif

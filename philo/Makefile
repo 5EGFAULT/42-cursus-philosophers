@@ -21,4 +21,4 @@ re: fclean all
 bonus:
 
 t: $(NAME)
-	./$(NAME) 20 
+	./$(NAME) 20  20 20 20 20

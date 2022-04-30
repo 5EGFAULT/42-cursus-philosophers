@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-t_philo	*init_philo(int nbr_philo)
+t_philo	*init_philo(int nbr_philo, t_simululation *sim)
 {
 	int		i;
 	t_philo	*philos;
@@ -24,7 +24,7 @@ t_philo	*init_philo(int nbr_philo)
 		philos[i].state = NONE;
 		philos[i].fork_left = 0;
 		philos[i].fork_right = 0;
-		philos[i].last_meal = 0;
+		philos[i].last_meal = gettimeofday(&(sim->tv), &(sim->tz));
 		philos[i].nb_times_eat = 0;
 	}
 	return (philos);
@@ -47,7 +47,7 @@ t_simululation	*init_sim(int argc, char **argv)
 	else
 		sim->nb_times_to_eat = -1;
 	sim->dead_philo = 0;
-	sim->philos = init_philo(sim->nb_philos);
+	sim->philos = init_philo(sim->nb_philos, sim);
 	i = -1;
 	sim->forks = (int *)malloc(sizeof(int) * sim->nb_philos);
 	while (++i < sim->nb_philos)
