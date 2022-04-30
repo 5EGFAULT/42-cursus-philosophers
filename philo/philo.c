@@ -14,12 +14,16 @@
 
 int main(int argc, char **argv)
 {
-	(void)argc;
-	(void)argv;
+	t_simululation	*sim;
+
 	if (argc < 5 || argc > 6)
 		return (printf("philo params error.\nUsage: ./philo \
 <number of philosophers> <time to eat> <time to sleep> <time to die> \
 [number of times each philosopher must eat]\n"), 2);
+	sim = init_sim(argc, argv);
+	if (!sim)
+		return (printf("philo malloc error.\n"), 3);
+	start_sim(sim);	
+	free_sim(sim);
 	return (0);
-
 }

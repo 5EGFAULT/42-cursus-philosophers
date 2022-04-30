@@ -1,5 +1,5 @@
 NAME		:= philo
-SRC			:= philo.c
+SRC			:= philo.c ft_atoi.c utils.c start.c
 OBJ			:= $(patsubst %.c, %.o, $(SRC))
 CC			:= gcc
 FLAGS		:= -Wall -Wextra -Werror -pthread  -g  #-fsanitize=address
