@@ -46,16 +46,30 @@ void	*run_philo(void *arg)
 			break_loop =  philo_eat(a->philo, a->sim);
 		else if (a->philo->state == EATING)
 		{
+			pthread_mutex_lock(&(a->sim->dead_lock));
+			if (a->sim->dead_philo)
+			{
+				pthread_mutex_unlock(&(a->sim->dead_lock));
+				break ;
+			}
 			gettimeofday(a->sim->tv, a->sim->tz);
 			printf("%ld %d is thinking\n",a->sim->tv->tv_usec, a->philo->id);
 			a->philo->state = THINKING;
+			pthread_mutex_unlock(&(a->sim->dead_lock));
 		}
 		else if (a->philo->state == THINKING)
 		{
+			pthread_mutex_lock(&(a->sim->dead_lock));
+			if (a->sim->dead_philo)
+			{
+				pthread_mutex_unlock(&(a->sim->dead_lock));
+				break ;
+			}
 			gettimeofday(a->sim->tv, a->sim->tz);
 			printf("%ld %d is sleeping\n",a->sim->tv->tv_usec, a->philo->id);
-			usleep(a->sim->time_to_sleep);
 			a->philo->state = SLEEPING;
+			pthread_mutex_unlock(&(a->sim->dead_lock));
+			usleep(a->sim->time_to_sleep);
 		}
 		//	philo_think(a->philo, a->sim, &break_loop);
 		//else if (a->philo->state == THINKING)

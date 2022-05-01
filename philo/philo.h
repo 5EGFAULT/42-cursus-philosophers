@@ -74,4 +74,6 @@ int				philo_take_right_fork(t_philo *philo, t_simululation *sim);
 int				philo_think(t_philo *philo, t_simululation *sim);
 int				philo_sleep(t_philo *philo, t_simululation *sim);
 
+int				check_arg(int argc, char **argv);
+
 #endif

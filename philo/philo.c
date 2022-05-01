@@ -20,6 +20,9 @@ int main(int argc, char **argv)
 		return (printf("philo params error.\nUsage: ./philo \
 <number of philosophers> <time to eat> <time to sleep> <time to die> \
 [number of times each philosopher must eat]\n"), 2);
+	if (!check_arg(argc, argv))
+		return (printf("philo params error.\nUsage: params must be \
+integers bigger than 0\n"), 2);
 	sim = init_sim(argc, argv);
 	if (!sim)
 		return (printf("philo malloc error.\n"), 3);
@@ -27,3 +30,4 @@ int main(int argc, char **argv)
 	free_sim(sim);
 	return (0);
 }
+
