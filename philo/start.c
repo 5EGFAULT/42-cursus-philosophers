@@ -25,7 +25,7 @@ void	start_sim(t_simululation *sim)
 			return ;
 		arg->philo = &(sim->philos[i]);
 		arg->sim = sim;
-		pthread_create(sim->philos[i].thread, NULL, &run_philo, arg);
+		pthread_create(sim->philos[i].thread, NULL, &run_philo, (void *)arg);
 	}
 	i = -1;
 	while (++i < sim->nb_philos)
@@ -38,67 +38,59 @@ void	*run_philo(void *arg)
 	int				break_loop;
 	a = (t_arg *)arg;
 	break_loop = 0;
+	gettimeofday(a->sim->tv, a->sim->tz);
+	a->philo->last_meal = a->sim->tv->tv_usec;
 	while (1)
 	{
-		pthread_mutex_lock(&a->sim->fork_lock);
-		if (a->sim->dead_philo)
-		{
-			pthread_mutex_unlock(&a->sim->fork_lock);
-			break ;
-		}
-		pthread_mutex_unlock(&a->sim->fork_lock);
-		if (a->philo->state == NONE || a->philo->state == SLEEPING)
-			philo_eat(a->philo, a->sim, &break_loop);
+		if (a->philo->state == SLEEPING)
+			break_loop =  philo_eat(a->philo, a->sim);
 		else if (a->philo->state == EATING)
-			philo_think(a->philo, a->sim, &break_loop);
+		{
+			gettimeofday(a->sim->tv, a->sim->tz);
+			printf("%ld %d is thinking\n",a->sim->tv->tv_usec, a->philo->id);
+			a->philo->state = THINKING;
+		}
 		else if (a->philo->state == THINKING)
-			philo_sleep(a->philo, a->sim, &break_loop);
+		{
+			gettimeofday(a->sim->tv, a->sim->tz);
+			printf("%ld %d is sleeping\n",a->sim->tv->tv_usec, a->philo->id);
+			usleep(a->sim->time_to_sleep);
+			a->philo->state = SLEEPING;
+		}
+		//	philo_think(a->philo, a->sim, &break_loop);
+		//else if (a->philo->state == THINKING)
+		//	philo_sleep(a->philo, a->sim, &break_loop);
 		if (break_loop)
 			break ;
 	}
-	if (break_loop)
-	{
-		pthread_mutex_lock(&a->sim->fork_lock);
-		if (!a->sim->dead_philo)
-		{
-			a->sim->dead_philo = a->philo->id;
-			printf("%d %d is died\n", gettimeofday(&(a->sim->tv), &(a->sim->tz)), a->philo->id);
-		}
-		pthread_mutex_unlock(&a->sim->fork_lock);	
-	}
+	pthread_mutex_unlock(&(a->sim->dead_lock));
 	return (free(a), NULL);
 }
 
-void	philo_eat(t_philo *philo, t_simululation *sim, int *b)
+int	sim_check_dead(t_simululation *sim)
 {
-	if (gettimeofday(&(sim->tv), &(sim->tz)) - philo->last_meal > sim->time_to_die)
-	{
-		*b = philo->id;
-		return ;
-	}
-	printf("%d %d is eating\n", gettimeofday(&(sim->tv), &(sim->tz)), philo->id);
-	usleep(sim->time_to_eat);
+	int				i;
+
+	i = 0;
+	pthread_mutex_lock(&(sim->dead_lock));
+	if (sim->dead_philo)
+		i = 1;
+	pthread_mutex_unlock(&(sim->dead_lock));
+	return (i);
 }
 
-void	philo_think(t_philo *philo, t_simululation *sim, int *b)
+int	is_philo_dead(t_philo *philo, t_simululation *sim)
 {
-	if (gettimeofday(&(sim->tv), &(sim->tz)) - philo->last_meal > sim->time_to_die)
+	gettimeofday(sim->tv, sim->tz);
+	if (sim->tv->tv_usec - philo->last_meal > sim->time_to_die)
 	{
-		*b = philo->id;
-		return ;
+		pthread_mutex_lock(&sim->dead_lock);
+		sim->dead_philo = philo->id;
+		gettimeofday(sim->tv, sim->tz);
+		printf("%ld %d has died\n", sim->tv->tv_usec, philo->id);
+		memset(sim->forks, 0, sizeof(int) * sim->nb_philos);
+		pthread_mutex_unlock(&sim->dead_lock);
+		return (1);
 	}
-	printf("%d %d is thinking\n", gettimeofday(&(sim->tv), &(sim->tz)), philo->id);
-	usleep(sim->time_to_die);
+	return (0);
 }
-
-void	philo_sleep(t_philo *philo, t_simululation *sim, int *b)
-{
-	if (gettimeofday(&(sim->tv), &(sim->tz)) - philo->last_meal > sim->time_to_die)
-	{
-		*b = philo->id;
-		return ;
-	}
-	printf("%d %d is sleeping\n", gettimeofday(&(sim->tv), &(sim->tz)), philo->id);
-	usleep(sim->time_to_sleep);
-}
-

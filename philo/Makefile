@@ -1,5 +1,5 @@
 NAME		:= philo
-SRC			:= philo.c ft_atoi.c utils.c start.c
+SRC			:= philo.c ft_atoi.c utils.c start.c eat.c
 OBJ			:= $(patsubst %.c, %.o, $(SRC))
 CC			:= gcc
 FLAGS		:= -Wall -Wextra -Werror -pthread  -g  #-fsanitize=address
@@ -21,4 +21,5 @@ re: fclean all
 bonus:
 
 t: $(NAME)
-	./$(NAME) 20  20 20 20 20
+#	./$(NAME) 1 800 200 200
+	./$(NAME) 5 800 200 200

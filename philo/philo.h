@@ -13,13 +13,13 @@
 #ifndef PHILO_H
 # define PHILO_H
 # include <pthread.h>
+# include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <sys/time.h>
 typedef enum e_state
 {
-	NONE,
 	EATING,
 	SLEEPING,
 	THINKING,
@@ -30,7 +30,7 @@ typedef struct s_philo
 	int			id;
 	int			fork_left;
 	int			fork_right;
-	int			last_meal;
+	long int	last_meal;
 	int			nb_times_eat;
 	t_state		state;
 	pthread_t	*thread;
@@ -45,8 +45,9 @@ typedef struct s_simululation
 	int 			dead_philo;
 	int 			*forks;
 	pthread_mutex_t fork_lock;
-	struct timeval	tv;
-	struct timezone	tz;
+	pthread_mutex_t dead_lock;
+	struct timeval	*tv;
+	struct timezone	*tz;
 	t_philo 		*philos;
 }t_simululation;
 
@@ -63,9 +64,14 @@ void			free_sim(t_simululation *sim);
 void			init_mutex(t_simululation *sim);
 void			start_sim(t_simululation *sim);
 void			*run_philo(void *arg);
+int				sim_check_dead(t_simululation *sim);
+int				is_philo_dead(t_philo *philo, t_simululation *sim);
 
-void			philo_eat(t_philo *philo, t_simululation *sim, int *b);
-void			philo_think(t_philo *philo, t_simululation *sim, int *b);
-void			philo_sleep(t_philo *philo, t_simululation *sim, int *b);
+int				philo_eat(t_philo *philo, t_simululation *sim);
+int				philo_take_left_fork(t_philo *philo, t_simululation *sim);
+int				philo_take_right_fork(t_philo *philo, t_simululation *sim);
+
+int				philo_think(t_philo *philo, t_simululation *sim);
+int				philo_sleep(t_philo *philo, t_simululation *sim);
 
 #endif
