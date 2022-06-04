@@ -18,7 +18,13 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <sys/time.h>
-
+typedef enum e_state
+{
+	EATING,
+	SLEEPING,
+	THINKING,
+	DEAD
+}t_state;
 typedef struct s_philo
 {
 	int			id;
@@ -26,29 +32,47 @@ typedef struct s_philo
 	int			fork_right;
 	long int	last_meal;
 	int			nb_times_eat;
+	t_state		state;
 	pthread_t	*thread;
-	t_sim		*sim;
 }t_philo;
-typedef struct s_sim
+typedef struct s_simululation
 {
 	int 			nb_philos;
 	int 			time_to_eat;
 	int 			time_to_sleep;
 	int 			time_to_die;
 	int 			nb_times_to_eat;
+	int 			dead_philo;
 	pthread_mutex_t *forks;
-	pthread_mutex_t print;
-	long int		start_time;
+	pthread_mutex_t dead_lock;
 	struct timeval	*tv;
 	struct timezone	*tz;
-}t_sim;
+	t_philo 		*philos;
+}t_simululation;
+
+typedef struct s_arg
+{
+	t_philo *philo;
+	t_simululation *sim;
+}t_arg;
 
 int	ft_atoi(const char *str);
-t_philo			*init_philo(int nbr_philo, t_sim *sim);
-t_sim	*init_sim(int argc, char **argv);
-void			free_sim(t_sim *sim);
-void			init_mutex(t_sim *sim);
-void			start_sim(t_sim *sim);
+t_philo			*init_philo(int nbr_philo, t_simululation *sim);
+t_simululation	*init_sim(int argc, char **argv);
+void			free_sim(t_simululation *sim);
+void			init_mutex(t_simululation *sim);
+void			start_sim(t_simululation *sim);
+void			*run_philo(void *arg);
+int				sim_check_dead(t_simululation *sim);
+int				is_philo_dead(t_philo *philo, t_simululation *sim);
+
+int				philo_eat(t_philo *philo, t_simululation *sim);
+int				philo_take_left_fork(t_philo *philo, t_simululation *sim);
+int				philo_take_right_fork(t_philo *philo, t_simululation *sim);
+
+int				philo_think(t_philo *philo, t_simululation *sim);
+int				philo_sleep(t_philo *philo, t_simululation *sim);
+
 int				check_arg(int argc, char **argv);
 
 #endif
