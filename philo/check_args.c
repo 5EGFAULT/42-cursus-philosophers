@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/01 16:38:00 by marvin            #+#    #+#             */
-/*   Updated: 2022/06/04 21:51:22 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/05 11:38:18 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int	ft_atoi_error(const char *str)
 	if ((str[i] == ' ') || (str[i] == '\0'))
 		return (sign * nbr);
 	return (-1);
-	return (0);
 }
 
 int	check_arg(int argc, char **argv)
@@ -57,8 +56,12 @@ int	check_arg(int argc, char **argv)
 	i = 0;
 	while (++i < argc)
 	{
-		if (ft_atoi_error(argv[i]) <= 0)
-			return (0);
+		if (ft_atoi_error(argv[i]) < 0)
+			return (printf("philo params error.\nUsage: params must be \
+positive integers\n"), 0);
 	}
+	if (ft_atoi_error(argv[1]) <= 0)
+		return (printf("philo params error.\nUsage: Nbr Philos must be \
+integer bigger than 0\n"), 0);
 	return (1);
 }
