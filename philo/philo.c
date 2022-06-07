@@ -39,14 +39,13 @@ int main(int argc, char **argv)
 void watch(t_sim *sim, t_philo *philo)
 {
 	int i;
-	int dead;
 
-	dead = 1;
-	while (dead)
+	while (1)
 	{
 		i = -1;
 		while (++i < sim->nbr_philo)
 		{
+			printf("in check  %d \n", philo->sim->dead_philo);
 			if (philo->sim->time_to_die <
 					gettime(philo->sim) - philo[i].last_meal &&
 				philo[i].nb_times_eat != philo->sim->nbr_times_eat)
@@ -54,10 +53,24 @@ void watch(t_sim *sim, t_philo *philo)
 				pthread_mutex_lock(&(philo->sim->dead));
 				philo->sim->dead_philo = philo[i].id;
 				printf("\033[0;34m%d\033[0;32mms\t\033[0;33m%d\t\033[0;31mdied\n", gettime(philo->sim), philo[i].id);
-				dead = 0;
 				pthread_mutex_unlock(&(philo->sim->dead));
-				break;
+				return;
 			}
+			else if (check_meals(sim, philo))
+				return;
 		}
 	}
+}
+
+int check_meals(t_sim *sim, t_philo *philo)
+{
+	int i;
+
+	i = -1;
+	while (++i < sim->nbr_philo)
+	{
+		if (philo[i].nb_times_eat != sim->nbr_times_eat)
+			return (1);
+	}
+	return (0);
 }

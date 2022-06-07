@@ -52,7 +52,10 @@ t_philo *init_philo(int nbr_philo, t_sim *sim)
 		philos[i].nb_times_eat = 0;
 		philos[i].fork_left = sim->forks + i;
 		philos[i].fork_right = sim->forks + (i + 1) % nbr_philo;
+		philos[i].nbr_forks = 0;
 	}
+	if (nbr_philo == 1)
+		philos[0].fork_right = NULL;
 	sim->time_start = gettime(sim);
 	return (philos);
 }
@@ -61,10 +64,7 @@ int print_line(t_philo *philo, char *str)
 {
 	pthread_mutex_lock(&(philo->sim->dead));
 	if (philo->sim->dead_philo)
-	{
-		pthread_mutex_unlock(&(philo->sim->dead));
-		return (1);
-	}
+		return (pthread_mutex_unlock(&(philo->sim->dead)), 1);
 	printf("\033[0;34m%d\033[0;32mms\t\033[0;33m%d\t\033[0;36m%s\n", gettime(philo->sim), philo->id, str);
 	pthread_mutex_unlock(&(philo->sim->dead));
 	return (0);
@@ -72,23 +72,41 @@ int print_line(t_philo *philo, char *str)
 
 void eat(t_philo *philo)
 {
+	int forks;
+
+	forks = 0;
 	pthread_mutex_lock(philo->fork_left);
 	print_line(philo, "has a fork");
-	pthread_mutex_lock(philo->fork_right);
-	print_line(philo, "has a fork");
-	philo->nb_times_eat++;
-	if (!print_line(philo, "is eating"))
+	forks++;
+	pthread_mutex_lock(&philo->sim->dead);
+	while (philo->sim->dead_philo == 0 && forks < 2)
 	{
+		pthread_mutex_unlock(&philo->sim->dead);
+		if (philo->fork_right)
+		{
+			pthread_mutex_lock(philo->fork_right);
+			print_line(philo, "has a fork");
+			forks++;
+		}
+		// usleep(philo->sim->time_to_die * 500);
+		printf("in loop {%d}\n", philo->sim->dead_philo);
+		pthread_mutex_lock(&philo->sim->dead);
+	}
+	pthread_mutex_unlock(&philo->sim->dead);
+	if (forks == 2 && !print_line(philo, "is eating"))
+	{
+		philo->nb_times_eat++;
 		usleep(philo->sim->time_to_eat * 1000);
 		philo->last_meal = gettime(philo->sim);
 	}
-	pthread_mutex_unlock(philo->fork_right);
+	if (philo->fork_right)
+		pthread_mutex_unlock(philo->fork_right);
 	pthread_mutex_unlock(philo->fork_left);
+	philo->nbr_forks = forks;
 }
 
 void *run(void *arg)
 {
-	printf("%d eating numbers\n\n\n", ((t_philo *)arg)->sim->nbr_times_eat);
 	pthread_mutex_lock(&(((t_philo *)arg)->sim->dead));
 	while (((t_philo *)arg)->sim->dead_philo == 0 &&
 		   ((t_philo *)arg)->sim->nbr_times_eat != ((t_philo *)arg)->nb_times_eat)
@@ -101,7 +119,6 @@ void *run(void *arg)
 		pthread_mutex_lock(&(((t_philo *)arg)->sim->dead));
 	}
 	pthread_mutex_unlock(&(((t_philo *)arg)->sim->dead));
-	printf("\033[0;31mPhilosopher %d out\n", ((t_philo *)arg)->id);
 	return (NULL);
 }
 
