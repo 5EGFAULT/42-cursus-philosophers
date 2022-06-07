@@ -40,18 +40,19 @@ void watch(t_sim *sim, t_philo *philo)
 {
 	int i;
 
-	while (1)
+	while (sim->nbr_philo != 1)
 	{
+		printf(" watcher out \n");
 		i = -1;
 		while (++i < sim->nbr_philo)
 		{
-			printf("in check  %d \n", philo->sim->dead_philo);
 			if (philo->sim->time_to_die <
 					gettime(philo->sim) - philo[i].last_meal &&
 				philo[i].nb_times_eat != philo->sim->nbr_times_eat)
 			{
 				pthread_mutex_lock(&(philo->sim->dead));
 				philo->sim->dead_philo = philo[i].id;
+				printf("%d watcher  in \n", philo[i].id);
 				printf("\033[0;34m%d\033[0;32mms\t\033[0;33m%d\t\033[0;31mdied\n", gettime(philo->sim), philo[i].id);
 				pthread_mutex_unlock(&(philo->sim->dead));
 				return;

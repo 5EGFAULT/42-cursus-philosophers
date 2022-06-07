@@ -54,5 +54,7 @@ void start(t_philo *philo);
 void end(t_philo *philo);
 void watch(t_sim *sim, t_philo *philo);
 int check_meals(t_sim *sim, t_philo *philo);
+void ft_sleep(int time);
+int getrealtime();
 
 #endif
