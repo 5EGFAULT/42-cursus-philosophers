@@ -62,7 +62,7 @@ int print_line(t_philo *philo, char *str)
 	pthread_mutex_lock(&(philo->sim->dead));
 	if (philo->sim->dead_philo)
 		return (pthread_mutex_unlock(&(philo->sim->dead)), 1);
-	printf("\033[0;34m%ds\t\033[0;33m%d\t\033[0;36m%s\n", gettime(philo->sim), philo->id, str);
+	printf("\033[0;34m%d\t\033[0;33m%d\t\033[0;36m%s\n", gettime(philo->sim), philo->id, str);
 	pthread_mutex_unlock(&(philo->sim->dead));
 	return (0);
 }

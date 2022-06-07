@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Tue Jun  7 19:22:00 2022
+# Make data base, printed on Tue Jun  7 19:28:12 2022
 
 # Variables
 
@@ -121,6 +121,7 @@ __CF_USER_TEXT_ENCODING = 0x11F6:0x0:0x0
 # environment
 COMMAND_MODE = unix2003
 # default
+ 
 MAKEFILES := 
 # automatic
 <F = $(notdir $<)
@@ -223,6 +224,6 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Tue Jun  7 19:22:00 2022
+# Finished Make data base on Tue Jun  7 19:28:12 2022
 
  
