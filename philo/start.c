@@ -52,6 +52,9 @@ t_philo *init_philo(int nbr_philo, t_sim *sim)
 		philos[i].nb_times_eat = 0;
 		philos[i].fork_left = sim->forks + i;
 		philos[i].fork_right = sim->forks + (i + 1) % nbr_philo;
+		philos[i].lfork = 1;
+		philos[i].rforkt = &(philos[(i + 1) % nbr_philo].lfork);
+		philos[i].is_eating = 0;
 	}
 	sim->time_start = gettime(sim);
 	return (philos);
@@ -67,20 +70,57 @@ int print_line(t_philo *philo, char *str)
 	return (0);
 }
 
+int check_dead(t_philo *philo)
+{
+	pthread_mutex_lock(&(philo->sim->dead));
+	if (philo->sim->dead_philo)
+		return (pthread_mutex_unlock(&(philo->sim->dead)), 0);
+	pthread_mutex_unlock(&(philo->sim->dead));
+	return (1);
+}
+
 void eat(t_philo *philo)
 {
-	pthread_mutex_lock(philo->fork_left);
-	print_line(philo, "has a fork");
-	pthread_mutex_lock(philo->fork_right);
-	print_line(philo, "has a fork");
-	if (!print_line(philo, "is eating"))
+	int forks;
+
+	forks = 0;
+	while (check_dead(philo) && forks < 2)
+	{
+		pthread_mutex_lock(philo->fork_left);
+		if (philo->lfork)
+		{
+			philo->lfork = 0;
+			print_line(philo, "has a fork");
+			forks++;
+		}
+		pthread_mutex_unlock(philo->fork_left);
+		pthread_mutex_lock(philo->fork_right);
+		if (*philo->rforkt)
+		{
+			*philo->rforkt = 0;
+			print_line(philo, "has a fork");
+			forks++;
+		}
+		pthread_mutex_unlock(philo->fork_right);
+	}
+	if (forks == 2 && !print_line(philo, "is eating"))
 	{
 		philo->nb_times_eat++;
+		// pthread_mutex_lock(&philo->sim->dead);
+		philo->is_eating = 1;
+		// pthread_mutex_unlock(&philo->sim->dead);
 		ft_sleep(philo->sim->time_to_eat);
 		philo->last_meal = gettime(philo->sim);
 	}
-	pthread_mutex_unlock(philo->fork_right);
+	pthread_mutex_lock(philo->fork_left);
+	if (philo->lfork)
+		philo->lfork = 1;
 	pthread_mutex_unlock(philo->fork_left);
+	pthread_mutex_lock(philo->fork_right);
+	if (*philo->rforkt)
+		*philo->rforkt = 1;
+	pthread_mutex_unlock(philo->fork_right);
+	philo->is_eating = 0;
 }
 
 void *run(void *arg)
@@ -92,7 +132,11 @@ void *run(void *arg)
 		pthread_mutex_unlock(&(((t_philo *)arg)->sim->dead));
 		eat(arg);
 		if (!print_line(arg, "is sleeping"))
+		{
+			((t_philo *)arg)->is_eating = 1;
 			ft_sleep(((t_philo *)arg)->sim->time_to_sleep);
+			((t_philo *)arg)->is_eating = 0;
+		}
 		print_line(arg, "is thinking");
 		pthread_mutex_lock(&(((t_philo *)arg)->sim->dead));
 	}
@@ -116,7 +160,7 @@ void start(t_philo *philo)
 	}
 	while (++i < nbr_philo)
 	{
-		philo[i].last_meal = philo[i].sim->time_start;
+		philo[i].last_meal = 0;
 		pthread_create(&((philo + i)->thread), NULL, run, (philo + i));
 	}
 }

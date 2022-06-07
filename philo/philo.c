@@ -45,9 +45,10 @@ void watch(t_sim *sim, t_philo *philo)
 		i = -1;
 		while (++i < sim->nbr_philo)
 		{
+			// printf("Philosopher %d  %d  %d\n", i + 1, gettime(philo->sim), philo[i].last_meal);
 			if (philo->sim->time_to_die <
 					gettime(philo->sim) - philo[i].last_meal &&
-				philo[i].nb_times_eat != philo->sim->nbr_times_eat)
+				philo[i].nb_times_eat != philo->sim->nbr_times_eat && !philo[i].is_eating)
 			{
 				pthread_mutex_lock(&(philo->sim->dead));
 				philo->sim->dead_philo = philo[i].id;
