@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 t_sim *init_sim(int argc, char **argv)
 {
@@ -28,13 +28,12 @@ t_sim *init_sim(int argc, char **argv)
 		sim->nbr_times_eat = ft_atoi(argv[5]);
 	else
 		sim->nbr_times_eat = -1;
-	sim->forks = malloc(sizeof(pthread_mutex_t) * sim->nbr_philo);
-	i = -1;
-	while (++i < sim->nbr_philo)
-		pthread_mutex_init(sim->forks + i, NULL);
-	sim->time_start = 0;
-	pthread_mutex_init(&(sim->dead), NULL);
-	pthread_mutex_init(&(sim->data), NULL);
+	// pthread_mutex_init(sim->forks + i, NULL);
+	// pthread_mutex_init(&(sim->dead), NULL);
+	// pthread_mutex_init(&(sim->data), NULL);
+	sem_init(&(sim->forks), 1, sim->nbr_philo);
+	sem_init(&(sim->dead), 1, 0);
+	sem_init(&(sim->data), 1, 1);
 	return (sim);
 }
 
@@ -57,6 +56,7 @@ t_philo *init_philo(int nbr_philo, t_sim *sim)
 		philos[i].rfork = &(philos[(i + 1) % nbr_philo].lfork);
 		philos[i].is_eating = 0;
 	}
+	sim->time_start = gettime(sim);
 	return (philos);
 }
 
@@ -65,7 +65,7 @@ int print_line(t_philo *philo, char *str)
 	pthread_mutex_lock(&(philo->sim->dead));
 	if (philo->sim->dead_philo)
 		return (pthread_mutex_unlock(&(philo->sim->dead)), 1);
-	printf("\033[0;34m%d\t\033[0;33m%d\t\033[0;36m%s\n", gettime(philo), philo->id, str);
+	printf("\033[0;34m%d\t\033[0;33m%d\t\033[0;36m%s\n", gettime(philo->sim), philo->id, str);
 	pthread_mutex_unlock(&(philo->sim->dead));
 	return (0);
 }
@@ -81,6 +81,7 @@ int check_dead(t_philo *philo)
 
 void eat(t_philo *philo)
 {
+
 	pthread_mutex_lock(philo->fork_left);
 	print_line(philo, "has a fork");
 	pthread_mutex_lock(philo->fork_right);
@@ -89,7 +90,7 @@ void eat(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo->sim->data);
 		philo->nb_times_eat++;
-		philo->last_meal = gettime(philo);
+		philo->last_meal = gettime(philo->sim);
 		pthread_mutex_unlock(&philo->sim->data);
 		ft_sleep(philo->sim->time_to_eat);
 	}
@@ -99,9 +100,6 @@ void eat(t_philo *philo)
 
 void *run(void *arg)
 {
-	// pthread_mutex_lock(&((t_philo *)arg)->sim->data);
-	//((t_philo *)arg)->time_start = getrealtime(arg);
-	// pthread_mutex_unlock(&((t_philo *)arg)->sim->data);
 	pthread_mutex_lock(&(((t_philo *)arg)->sim->dead));
 	// while (((t_philo *)arg)->sim->dead_philo == 0)
 	while (((t_philo *)arg)->sim->dead_philo == 0 &&
@@ -122,7 +120,6 @@ void start(t_philo *philo)
 {
 	int i;
 	int nbr_philo;
-	int start;
 
 	nbr_philo = philo->sim->nbr_philo;
 	i = -1;
@@ -135,15 +132,11 @@ void start(t_philo *philo)
 		print_line(philo, "\033[0;31mdied");
 		return;
 	}
-	start = getrealtime();
-	printf("{%d}\n", getrealtime());
 	while (++i < nbr_philo)
 	{
 		philo[i].last_meal = 0;
-		philo[i].time_start = 0;
-		philo[i].time_start = start;
 		pthread_create(&((philo + i)->thread), NULL, run, (philo + i));
-		usleep(60);
+		// ft_sleep(10);
 	}
 }
 
@@ -157,11 +150,10 @@ void end(t_philo *philo)
 	while (++i < nbr_philo)
 	{
 		pthread_join(((philo + i)->thread), NULL);
-		pthread_mutex_destroy(((philo + i)->fork_left));
 	}
-	free(philo->sim->forks);
-	pthread_mutex_destroy(&(philo->sim->dead));
-	pthread_mutex_destroy(&(philo->sim->data));
+	sem_destroy(&(sim->forks);
+	sem_destroy(&(sim->dead);
+	sem_destroy(&(sim->data);
 	free(philo->sim);
 	free(philo);
 }

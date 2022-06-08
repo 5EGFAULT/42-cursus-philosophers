@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-#define PHILO_H
-#include <pthread.h>
+#ifndef PHILO_BONNUS_H
+#define PHILO_BONNUS_H
+#include <semaphore.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -27,31 +27,25 @@ typedef struct s_sim
 	int time_to_die;
 	int time_start;
 	int nbr_times_eat;
-	pthread_mutex_t *forks;
-	pthread_mutex_t dead;
-	pthread_mutex_t data;
+	sem_t forks;
+	sem_t dead;
+	sem_t data;
 	int dead_philo;
 } t_sim;
+
 typedef struct s_philo
 {
 	int id;
-	pthread_mutex_t *fork_left;
-	pthread_mutex_t *fork_right;
-	int is_eating;
-	int lfork;
-	int *rfork;
 	int last_meal;
 	int nb_times_eat;
-	int time_start;
-	int nbr_forks;
-	pthread_t thread;
+	// pthread_t thread;
 	t_sim *sim;
 } t_philo;
 
 int ft_atoi(const char *str);
 t_philo *init_philo(int nbr_philo, t_sim *sim);
 t_sim *init_sim(int argc, char **argv);
-int gettime(t_philo *philo);
+int gettime(t_sim *sim);
 
 int check_arg(int argc, char **argv);
 

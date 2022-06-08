@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-// void	free_all(t_philo *philos)
+//void	free_all(t_philo *philos)
 //{
 //	int i;
 //	i = -1;
@@ -20,9 +20,9 @@
 //	free(philos);
 //}
 
-int gettime(t_philo *p)
+int	gettime(t_sim *sim)
 {
-	struct timeval tv;
+	struct timeval	tv;
 	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000 + tv.tv_usec / 1000) - p->time_start);
+	return ((tv.tv_sec * 1000 + tv.tv_usec / 1000) - sim->time_start);
 }

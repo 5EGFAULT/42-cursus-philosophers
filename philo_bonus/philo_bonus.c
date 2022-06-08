@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 int main(int argc, char **argv)
 {
@@ -45,16 +45,15 @@ void watch(t_sim *sim, t_philo *philo)
 		i = -1;
 		while (++i < sim->nbr_philo)
 		{
-			// printf("Philosopher %d  %d  %d\n", i + 1, gettime(philo->sim), philo[i].last_meal);
-			pthread_mutex_lock(&((philo->sim->data)));
+				pthread_mutex_lock(&((philo->sim->data)));
 			if (philo->sim->time_to_die <
-					gettime(philo + i) - philo[i].last_meal &&
+					gettime(philo->sim) - philo[i].last_meal &&
 				philo[i].nb_times_eat != philo->sim->nbr_times_eat)
 			{
 				pthread_mutex_unlock(&(philo->sim->data));
 				pthread_mutex_lock(&(philo->sim->dead));
 				philo->sim->dead_philo = philo[i].id;
-				printf("\033[0;34m%d\t\033[0;33m%d\t\033[0;31mdied\n", gettime(philo + i), philo[i].id);
+				printf("\033[0;34m%d\t\033[0;33m%d\t\033[0;31mdied\n", gettime(philo->sim), philo[i].id);
 				pthread_mutex_unlock(&(philo->sim->dead));
 				return;
 			}
