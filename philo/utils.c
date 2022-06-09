@@ -20,9 +20,13 @@
 //	free(philos);
 //}
 
-int gettime(t_philo *p)
+int gettime(t_philo *philo)
 {
+	static unsigned long start;
 	struct timeval tv;
+	(void)philo;
 	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000 + tv.tv_usec / 1000) - p->time_start);
+	if (!start)
+		start = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000 - start);
 }

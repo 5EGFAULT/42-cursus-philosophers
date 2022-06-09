@@ -62,8 +62,9 @@ t_philo *init_philo(int nbr_philo, t_sim *sim)
 
 int print_line(t_philo *philo, char *str)
 {
-	pthread_mutex_lock(&(philo->sim->dead));
-	if (philo->sim->dead_philo)
+	if (pthread_mutex_lock(&(philo->sim->dead)))
+		return (1);
+	if (philo->sim->end)
 		return (pthread_mutex_unlock(&(philo->sim->dead)), 1);
 	printf("\033[0;34m%d\t\033[0;33m%d\t\033[0;36m%s\n", gettime(philo), philo->id, str);
 	pthread_mutex_unlock(&(philo->sim->dead));
@@ -136,11 +137,9 @@ void start(t_philo *philo)
 		return;
 	}
 	start = getrealtime();
-	printf("{%d}\n", getrealtime());
 	while (++i < nbr_philo)
 	{
 		philo[i].last_meal = 0;
-		philo[i].time_start = 0;
 		philo[i].time_start = start;
 		pthread_create(&((philo + i)->thread), NULL, run, (philo + i));
 		usleep(60);
@@ -168,10 +167,9 @@ void end(t_philo *philo)
 
 void ft_sleep(int time)
 {
-	int timenow = getrealtime();
-	while (timenow + time > getrealtime())
+	while (gettime(NULL) < time)
 	{
-		usleep(100);
+		usleep(10);
 	}
 }
 
