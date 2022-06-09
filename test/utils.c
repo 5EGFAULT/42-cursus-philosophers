@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 14:52:33 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/09 22:19:43 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/09 22:37:54 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void ft_sleep(int time)
 	size_t i;
 
 	i = getime();
-	usleep(time * 800);
+	// usleep(time * 800);
 	while (getime() - i < (size_t)time)
 		usleep(100);
 }

@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:09:06 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/09 22:16:53 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/09 22:53:01 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,22 @@ void start(t_philo *philo)
 {
 	int i;
 
-	i = -1;
 	philo->sim->time_start = getime();
+	i = -1;
 	while (++i < philo->sim->nb_philo)
 	{
-		pthread_create(&(philo[i].thread), NULL, run, philo + i);
-		usleep(100);
+		if (i % 2 == 0 && philo->sim->nb_philo - 1 != i)
+			pthread_create(&(philo[i].thread), NULL, run, philo + i);
 	}
+	i = -1;
+	while (++i < philo->sim->nb_philo)
+	{
+		if (i % 2)
+			pthread_create(&(philo[i].thread), NULL, run, philo + i);
+	}
+	if (philo->sim->nb_philo - 1 % 2 == 0)
+		pthread_create(&(philo[philo->sim->nb_philo - 1].thread), NULL, run,
+					   philo + philo->sim->nb_philo - 1);
 }
 
 void end(t_philo *philo)
