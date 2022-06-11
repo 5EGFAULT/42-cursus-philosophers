@@ -2,8 +2,8 @@ NAME		:= philo
 SRC			:= utils.c init.c start.c philo.c check_args.c eat.c
 OBJ			:= $(patsubst %.c, %.o, $(SRC))
 CC			:= gcc
-FLAGS		:= -Wall -Wextra -Werror -pthread  -g   -fsanitize=thread 
-#FLAGS		:= -Wall -Wextra -Werror -pthread  -g    #-fsanitize=address
+#FLAGS		:= -Wall -Wextra -Werror -pthread  -g   -fsanitize=thread 
+FLAGS		:= -Wall -Wextra -Werror -pthread  -g    #-fsanitize=address
 .PHONY: all clean fclean re bonus
 all: $(NAME)
 $(NAME): $(OBJ)

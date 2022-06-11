@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Sat Jun 11 09:45:33 2022
+# Make data base, printed on Sat Jun 11 22:35:18 2022
 
 # Variables
 
@@ -39,11 +39,11 @@ MAKEFILE_LIST :=
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n0000jyr0004gp/T/vscode-ipc-93e98180-c256-4dbd-8151-10f582eea40a.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n0000jyr0004gp/T/vscode-ipc-d15c6312-5ad1-4a14-a56d-5d0bfdc63a41.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.k7uZtaqbEv/Render
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.XM4cyRlaR6/Render
 # environment
 PATH = /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 # environment
@@ -53,7 +53,7 @@ ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.ehhe5JXhMI/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.nDDin1Gm1D/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -139,7 +139,7 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 12598
+VSCODE_PID = 2499
 # variable set hash-table stats:
 # Load=63/1024=6%, Rehash=0, Collisions=1/84=1%
 
@@ -223,6 +223,6 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Sat Jun 11 09:45:33 2022
+# Finished Make data base on Sat Jun 11 22:35:18 2022
 
  

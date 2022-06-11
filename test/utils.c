@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 14:52:33 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/11 08:19:28 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/11 22:50:31 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,6 @@ int print_line(t_philo *philo, char *str)
 {
 	if (pthread_mutex_lock(&(philo->sim->dead)))
 		return (1);
-	if (philo->sim->end)
-	{
-		printf("%d\t%d\t %s\n", getime() - philo->sim->time_start, philo->id, str);
-		pthread_mutex_unlock(&(philo->sim->dead));
-		return (0);
-	}
-	return (pthread_mutex_unlock(&(philo->sim->dead)), 1);
+	printf("%d\t%d\t %s\n", getime() - philo->sim->time_start, philo->id, str);
+	return (pthread_mutex_unlock(&(philo->sim->dead)), 0);
 }
