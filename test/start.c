@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:09:06 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/11 09:24:29 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/11 09:35:35 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,25 @@
 int is_dead(t_philo *philo)
 {
 	int r;
-	pthread_mutex_lock(&((t_philo *)philo)->sim->dead);
+	if (pthread_mutex_lock(&((t_philo *)philo)->sim->dead))
+		return (0);
 	r = ((t_philo *)philo)->sim->end;
-	pthread_mutex_unlock(&((t_philo *)philo)->sim->dead);
+	if (pthread_mutex_unlock(&((t_philo *)philo)->sim->dead))
+		return (0);
 	return (r);
 }
 
 int is_eaten(t_philo *philo)
 {
 	int r;
-	pthread_mutex_lock(&((t_philo *)philo)->data);
+	if (pthread_mutex_lock(&((t_philo *)philo)->data))
+		return (0);
 	if (philo->nb_times_eat != philo->sim->nbr_times_eat)
 		r = 1;
 	else
 		r = 0;
-	pthread_mutex_unlock(&((t_philo *)philo)->data);
+	if (pthread_mutex_unlock(&((t_philo *)philo)->data))
+		return (0);
 	return (r);
 }
 
@@ -38,8 +42,6 @@ void *run(void *philo)
 	t_philo *p = (t_philo *)philo;
 	while (is_dead(p) && is_eaten(p))
 	{
-		if (eat(p))
-			return (NULL);
 		if (eat(p))
 			return (NULL);
 		if (print_line(p, "is sleeping"))
