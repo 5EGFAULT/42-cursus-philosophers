@@ -29,6 +29,7 @@ typedef struct s_sim
 	int nbr_times_eat;
 	pthread_mutex_t *forks;
 	pthread_mutex_t dead;
+	pthread_mutex_t data;
 	int end;
 
 } t_sim;
@@ -38,7 +39,7 @@ typedef struct s_philo
 	pthread_t thread;
 	pthread_mutex_t *lfork;
 	pthread_mutex_t *rfork;
-	pthread_mutex_t data;
+	// pthread_mutex_t data;
 	int id;
 	int last_meal;
 	int nb_times_eat;

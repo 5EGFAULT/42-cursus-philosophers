@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:09:06 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/11 23:53:14 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/11 23:58:14 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,26 @@ int is_dead(t_philo *philo)
 {
 	if (pthread_mutex_lock(&((t_philo *)philo)->sim->dead))
 		return (0);
+	if (((t_philo *)philo)->sim->end)
+	{
+		pthread_mutex_unlock(&((t_philo *)philo)->sim->dead);
+		return (1);
+	}
 	if (pthread_mutex_unlock(&((t_philo *)philo)->sim->dead))
 		return (0);
-	return (1);
+	return (0);
 }
 
 int is_eaten(t_philo *philo)
 {
 	int r;
-	if (pthread_mutex_lock(&((t_philo *)philo)->data))
+	if (pthread_mutex_lock(&((t_philo *)philo)->sim->data))
 		return (0);
 	if (philo->nb_times_eat != philo->sim->nbr_times_eat)
 		r = 1;
 	else
 		r = 0;
-	if (pthread_mutex_unlock(&((t_philo *)philo)->data))
+	if (pthread_mutex_unlock(&((t_philo *)philo)->sim->data))
 		return (0);
 	return (r);
 }
@@ -94,9 +99,10 @@ void destroy_mutexs(t_philo *philo)
 	while (++i < philo->sim->nb_philo)
 	{
 		pthread_mutex_destroy((philo[i].lfork));
-		pthread_mutex_destroy(&(philo[i].data));
+		// pthread_mutex_destroy(&(philo[i].data));
 	}
 	pthread_mutex_destroy(&(philo->sim->dead));
+	pthread_mutex_destroy(&(philo->sim->data));
 }
 
 void end(t_philo *philo)

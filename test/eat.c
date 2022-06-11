@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 17:20:31 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/11 22:37:29 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/11 23:56:50 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ int eat(t_philo *philo)
 		return (1);
 	if (print_line(philo, "is eating"))
 		return (1);
-	if (pthread_mutex_lock(&(philo->data)))
+	if (pthread_mutex_lock(&(philo->sim->data)))
 		return (1);
 	philo->nb_times_eat++;
 	philo->last_meal = getime();
-	if (pthread_mutex_unlock(&(philo->data)))
+	if (pthread_mutex_unlock(&(philo->sim->data)))
 		return (1);
 	ft_sleep(philo->sim->time_to_eat, philo->sim->nb_philo);
 	if (leave_fork(philo))

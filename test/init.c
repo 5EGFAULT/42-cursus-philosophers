@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:01:41 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/11 09:25:22 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/11 23:54:48 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_sim *init_sim(int argc, char **argv)
 	while (++i < sim->nb_philo)
 		pthread_mutex_init(&(sim->forks[i]), NULL);
 	pthread_mutex_init(&sim->dead, NULL);
+	pthread_mutex_init(&sim->data, NULL);
 	return (sim);
 }
 
@@ -57,7 +58,7 @@ t_philo *init_philo(int nbr_philo, t_sim *sim)
 		philo[i].rfork = sim->forks + (i + 1) % nbr_philo;
 		philo[i].nb_times_eat = 0;
 		philo[i].error = 1;
-		pthread_mutex_init(&philo[i].data, NULL);
+		// pthread_mutex_init(&philo[i].data, NULL);
 	}
 	return (philo);
 }
