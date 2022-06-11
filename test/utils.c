@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 14:52:33 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/09 22:37:54 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/11 08:19:28 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,18 @@ int getime()
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-void ft_sleep(int time)
+void ft_sleep(int time, int nbr_philo)
 {
 	size_t i;
 
 	i = getime();
-	// usleep(time * 800);
 	while (getime() - i < (size_t)time)
-		usleep(100);
+	{
+		if (nbr_philo <= 100)
+			usleep(100);
+		else
+			usleep(1000);
+	}
 }
 
 int ft_atoi(const char *str)
@@ -51,12 +55,13 @@ int ft_atoi(const char *str)
 
 int print_line(t_philo *philo, char *str)
 {
-	// printf("==> %d %s  %d\n", philo->id, str, philo->sim->end);
 	if (pthread_mutex_lock(&(philo->sim->dead)))
 		return (1);
-	if (!(philo->sim->end))
-		return (pthread_mutex_unlock(&(philo->sim->dead)), 1);
-	printf("%d\t%d\t%s\n", getime() - philo->sim->time_start, philo->id, str);
-	pthread_mutex_unlock(&(philo->sim->dead));
-	return (0);
+	if (philo->sim->end)
+	{
+		printf("%d\t%d\t %s\n", getime() - philo->sim->time_start, philo->id, str);
+		pthread_mutex_unlock(&(philo->sim->dead));
+		return (0);
+	}
+	return (pthread_mutex_unlock(&(philo->sim->dead)), 1);
 }

@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:01:41 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/09 18:56:06 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/11 09:25:22 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ t_sim *init_sim(int argc, char **argv)
 	if (!sim)
 		return (NULL);
 	sim->nb_philo = ft_atoi(argv[1]);
-	sim->time_to_eat = ft_atoi(argv[2]);
-	sim->time_to_sleep = ft_atoi(argv[3]);
-	sim->time_to_die = ft_atoi(argv[4]);
+	sim->time_to_eat = ft_atoi(argv[3]);
+	sim->time_to_sleep = ft_atoi(argv[4]);
+	sim->time_to_die = ft_atoi(argv[2]);
 	sim->time_start = getime();
 	if (argc == 6)
 		sim->nbr_times_eat = ft_atoi(argv[5]);

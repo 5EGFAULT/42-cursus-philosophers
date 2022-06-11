@@ -48,7 +48,7 @@ typedef struct s_philo
 
 //! utils.c
 int getime();
-void ft_sleep(int time);
+void ft_sleep(int time, int nbr_philo);
 int ft_atoi(const char *str);
 int print_line(t_philo *philo, char *str);
 
@@ -66,8 +66,11 @@ int ft_atoi_error(const char *str);
 int check_arg(int argc, char **argv);
 
 //! eat.c
-int take_fork(t_philo *philo, int rl);
-int leave_fork(t_philo *philo, int rl);
+int take_fork(t_philo *philo);
+int leave_fork(t_philo *philo);
 int eat(t_philo *philo);
+
+void destroy_mutexs(t_philo *philo);
+void watch(t_philo *philo);
 
 #endif
