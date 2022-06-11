@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:09:06 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/11 22:52:39 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/11 23:53:14 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,20 @@ void start(t_philo *philo)
 	i = -1;
 	while (++i < philo->sim->nb_philo)
 	{
-		// if (i % 2 == 0 && (philo->sim->nb_philo - 1) != i)
-		if (i % 2 == 0)
+		if (i % 2 == 0 && (philo->sim->nb_philo - 1) != i)
+		// if (i % 2 == 0)
 		{
 			philo[i].last_meal = philo->sim->time_start;
 			pthread_create(&(philo[i].thread), NULL, &run, &philo[i]);
 		}
 	}
-	usleep(100);
+	// usleep(100);
+	if ((philo->sim->nb_philo - 1) % 2 == 0)
+	{
+		philo[i].last_meal = philo->sim->time_start;
+		pthread_create(&(philo[philo->sim->nb_philo - 1].thread), NULL, run,
+					   philo + philo->sim->nb_philo - 1);
+	}
 	i = -1;
 	while (++i < philo->sim->nb_philo)
 	{
@@ -77,12 +83,7 @@ void start(t_philo *philo)
 			pthread_create(&(philo[i].thread), NULL, &run, &philo[i]);
 		}
 	}
-	// if ((philo->sim->nb_philo - 1) % 2 == 0)
-	//{
-	//	philo[i].last_meal = philo->sim->time_start;
-	//	pthread_create(&(philo[philo->sim->nb_philo - 1].thread), NULL, run,
-	//				   philo + philo->sim->nb_philo - 1);
-	// }
+	// usleep(100);
 }
 
 void destroy_mutexs(t_philo *philo)
