@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:09:06 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/11 23:58:14 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/12 04:40:58 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int is_dead(t_philo *philo)
 {
+	//(void)philo;
+	// return (1);
 	if (pthread_mutex_lock(&((t_philo *)philo)->sim->dead))
 		return (0);
 	if (((t_philo *)philo)->sim->end)
@@ -21,13 +23,14 @@ int is_dead(t_philo *philo)
 		pthread_mutex_unlock(&((t_philo *)philo)->sim->dead);
 		return (1);
 	}
-	if (pthread_mutex_unlock(&((t_philo *)philo)->sim->dead))
-		return (0);
+	pthread_mutex_unlock(&((t_philo *)philo)->sim->dead);
 	return (0);
 }
 
 int is_eaten(t_philo *philo)
 {
+	//(void)philo;
+	// return (1);
 	int r;
 	if (pthread_mutex_lock(&((t_philo *)philo)->sim->data))
 		return (0);
@@ -43,18 +46,18 @@ int is_eaten(t_philo *philo)
 void *run(void *philo)
 {
 	t_philo *p = (t_philo *)philo;
-	while (is_dead(p) && is_eaten(p))
+	while (is_dead(p))
 	{
 		if (eat(p))
-			return (NULL);
+			return (printf("  %d  eat  error\n", p->id), NULL);
 		if (print_line(p, "is sleeping"))
-			return (NULL);
+			return (printf("  %d  sleep  error\n", p->id), NULL);
 		else
 			ft_sleep(p->sim->time_to_sleep, p->sim->nb_philo);
 		if (print_line(p, "is thinking"))
-			return (NULL);
+			return (printf("  %d   think error\n", p->id), NULL);
 	}
-	return (NULL);
+	return (printf("  %d   dead error\n", p->id), NULL);
 }
 
 void start(t_philo *philo)
@@ -73,12 +76,7 @@ void start(t_philo *philo)
 		}
 	}
 	// usleep(100);
-	if ((philo->sim->nb_philo - 1) % 2 == 0)
-	{
-		philo[i].last_meal = philo->sim->time_start;
-		pthread_create(&(philo[philo->sim->nb_philo - 1].thread), NULL, run,
-					   philo + philo->sim->nb_philo - 1);
-	}
+
 	i = -1;
 	while (++i < philo->sim->nb_philo)
 	{
@@ -88,7 +86,12 @@ void start(t_philo *philo)
 			pthread_create(&(philo[i].thread), NULL, &run, &philo[i]);
 		}
 	}
-	// usleep(100);
+	if ((philo->sim->nb_philo - 1) % 2 == 0)
+	{
+		philo[i].last_meal = philo->sim->time_start;
+		pthread_create(&(philo[philo->sim->nb_philo - 1].thread), NULL, run,
+					   philo + philo->sim->nb_philo - 1);
+	} // usleep(100);
 }
 
 void destroy_mutexs(t_philo *philo)

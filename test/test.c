@@ -21,5 +21,18 @@ void ft_sleep(int time)
 	// usleep(time * 800);
 	while (getime() - i < (size_t)time)
 		usleep(100);
-	
+}
+
+int main(int ac, char **av)
+{
+	int i;
+	pthread_mutex_t mutex;
+
+	i = getime();
+	pthread_mutex_init(&mutex, NULL);
+	printf("%d \n", getime() - i);
+	printf("%d  l %d\n", getime() - i, pthread_mutex_lock(&mutex));
+	pthread_mutex_destroy(&mutex);
+	printf("%d  unl %d\n", getime() - i, pthread_mutex_unlock(&mutex));
+	return (0);
 }

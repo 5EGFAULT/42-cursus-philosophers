@@ -32,7 +32,9 @@ int main(int argc, char **argv)
 		return (3);
 	start(philos);
 	watch(philos);
+	printf("ss\n");
 	end(philos);
+	printf("oo\n");
 	return (0);
 }
 
@@ -42,13 +44,14 @@ int check_death(t_philo *philo)
 
 	r = 0;
 	pthread_mutex_lock(&philo->sim->data);
-	if (philo->nb_times_eat != philo->sim->nbr_times_eat && philo->last_meal + philo->sim->time_to_die < getime())
+	if (getime() - philo->last_meal > philo->sim->time_to_die)
 	{
 		pthread_mutex_lock(&philo->sim->dead);
 		philo->sim->end = 0;
 		printf("%d\t%d\t %s\n", getime() - philo->sim->time_start, philo->id, "died");
 		r = 1;
 		pthread_mutex_unlock(&philo->sim->dead);
+		pthread_mutex_destroy(&philo->sim->dead);
 	}
 	pthread_mutex_unlock(&philo->sim->data);
 	return (r);
@@ -68,6 +71,7 @@ int check_all_eaten(t_philo *philo)
 	}
 	return (0);
 }
+
 void watch(t_philo *philo)
 {
 	int i;
