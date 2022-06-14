@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 17:20:31 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/12 04:41:12 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/14 08:49:38 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int eat(t_philo *philo)
 		return (1);
 	if (pthread_mutex_lock(&(philo->sim->data)))
 		return (1);
-	// philo->nb_times_eat++;
+	philo->nb_times_eat++;
 	philo->last_meal = getime();
 	pthread_mutex_unlock(&(philo->sim->data));
 	ft_sleep(philo->sim->time_to_eat, philo->sim->nb_philo);

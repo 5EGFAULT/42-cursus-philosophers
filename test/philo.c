@@ -31,27 +31,33 @@ int main(int argc, char **argv)
 	if (!philos)
 		return (3);
 	start(philos);
-	watch(philos);
+	if (watch(philos) == 1)
+		return (0);
 	printf("ss\n");
-	end(philos);
+
+	// destroy_mutexs(philos);
+	//  end(philos);
+	// end(philos);
 	printf("oo\n");
 	return (0);
 }
 
-int check_death(t_philo *philo)
+int check_death(t_philo *philo, t_philo *p)
 {
 	int r;
 
 	r = 0;
 	pthread_mutex_lock(&philo->sim->data);
-	if (getime() - philo->last_meal > philo->sim->time_to_die)
+	if (getime() - philo->last_meal >= philo->sim->time_to_die && philo->nb_times_eat != philo->sim->nbr_times_eat)
 	{
 		pthread_mutex_lock(&philo->sim->dead);
 		philo->sim->end = 0;
 		printf("%d\t%d\t %s\n", getime() - philo->sim->time_start, philo->id, "died");
 		r = 1;
-		pthread_mutex_unlock(&philo->sim->dead);
-		pthread_mutex_destroy(&philo->sim->dead);
+		destroy_mutexs(p);
+		// pthread_mutex_destroy(&philo->sim->dead);
+		// pthread_mutex_destroy(&philo->sim->data);
+		//  pthread_mutex_unlock(&philo->sim->dead);
 	}
 	pthread_mutex_unlock(&philo->sim->data);
 	return (r);
@@ -72,17 +78,20 @@ int check_all_eaten(t_philo *philo)
 	return (0);
 }
 
-void watch(t_philo *philo)
+int watch(t_philo *philo)
 {
 	int i;
 
-	while (check_all_eaten(philo))
+	while (1)
 	{
 		i = -1;
 		while (++i < philo->sim->nb_philo)
 		{
-			if (check_death(philo + i))
-				return;
+			if (check_death(philo + i, philo))
+				return (1);
+			else if (!check_all_eaten(philo))
+				return (1);
 		}
 	}
+	return (0);
 }

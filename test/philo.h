@@ -72,6 +72,6 @@ int leave_fork(t_philo *philo);
 int eat(t_philo *philo);
 
 void destroy_mutexs(t_philo *philo);
-void watch(t_philo *philo);
+int watch(t_philo *philo);
 
 #endif
