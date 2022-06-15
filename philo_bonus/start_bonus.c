@@ -1,176 +1,86 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   start.c                                            :+:      :+:    :+:   */
+/*   start_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/30 14:55:18 by marvin            #+#    #+#             */
-/*   Updated: 2022/04/30 14:55:18 by marvin           ###   ########.fr       */
+/*   Created: 2022/06/09 15:09:06 by asouinia          #+#    #+#             */
+/*   Updated: 2022/06/15 02:00:56 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-t_sim *init_sim(int argc, char **argv)
+int	is_dead(t_philo *philo)
 {
-	t_sim *sim;
-	int i;
-
-	if (!(sim = (t_sim *)malloc(sizeof(t_sim))))
-		return (NULL);
-	sim->nbr_philo = ft_atoi(argv[1]);
-	sim->time_to_eat = ft_atoi(argv[3]);
-	sim->time_to_sleep = ft_atoi(argv[4]);
-	sim->time_to_die = ft_atoi(argv[2]);
-	sim->dead_philo = 0;
-	if (argc == 6)
-		sim->nbr_times_eat = ft_atoi(argv[5]);
-	else
-		sim->nbr_times_eat = -1;
-	// pthread_mutex_init(sim->forks + i, NULL);
-	// pthread_mutex_init(&(sim->dead), NULL);
-	// pthread_mutex_init(&(sim->data), NULL);
-	sem_init(&(sim->forks), 1, sim->nbr_philo);
-	sem_init(&(sim->dead), 1, 0);
-	sem_init(&(sim->data), 1, 1);
-	return (sim);
-}
-
-t_philo *init_philo(int nbr_philo, t_sim *sim)
-{
-	int i;
-	t_philo *philos;
-
-	i = -1;
-	philos = (t_philo *)malloc(sizeof(t_philo) * nbr_philo);
-	while (++i < nbr_philo)
+	if (pthread_mutex_lock(&((t_philo *)philo)->sim->dead))
+		return (0);
+	if (((t_philo *)philo)->sim->end)
 	{
-		philos[i].id = i + 1;
-		philos[i].sim = sim;
-		philos[i].last_meal = 0;
-		philos[i].nb_times_eat = 0;
-		philos[i].fork_left = sim->forks + i;
-		philos[i].fork_right = sim->forks + (i + 1) % nbr_philo;
-		philos[i].lfork = 1;
-		philos[i].rfork = &(philos[(i + 1) % nbr_philo].lfork);
-		philos[i].is_eating = 0;
+		pthread_mutex_unlock(&((t_philo *)philo)->sim->dead);
+		return (1);
 	}
-	sim->time_start = gettime(sim);
-	return (philos);
-}
-
-int print_line(t_philo *philo, char *str)
-{
-	pthread_mutex_lock(&(philo->sim->dead));
-	if (philo->sim->dead_philo)
-		return (pthread_mutex_unlock(&(philo->sim->dead)), 1);
-	printf("\033[0;34m%d\t\033[0;33m%d\t\033[0;36m%s\n", gettime(philo->sim), philo->id, str);
-	pthread_mutex_unlock(&(philo->sim->dead));
+	pthread_mutex_unlock(&((t_philo *)philo)->sim->dead);
 	return (0);
 }
 
-int check_dead(t_philo *philo)
+int	is_eaten(t_philo *philo)
 {
-	pthread_mutex_lock(&(philo->sim->dead));
-	if (philo->sim->dead_philo)
-		return (pthread_mutex_unlock(&(philo->sim->dead)), 0);
-	pthread_mutex_unlock(&(philo->sim->dead));
-	return (1);
+	int	r;
+
+	if (pthread_mutex_lock(&((t_philo *)philo)->sim->data))
+		return (0);
+	if (philo->nb_times_eat != philo->sim->nbr_times_eat)
+		r = 1;
+	else
+		r = 0;
+	pthread_mutex_unlock(&((t_philo *)philo)->sim->data);
+	return (r);
 }
 
-void eat(t_philo *philo)
+void	*run(void *philo)
 {
+	t_philo	*p;
 
-	pthread_mutex_lock(philo->fork_left);
-	print_line(philo, "has a fork");
-	pthread_mutex_lock(philo->fork_right);
-	print_line(philo, "has a fork");
-	if (!print_line(philo, "is eating"))
+	p = (t_philo *)philo;
+	if (p->id % 2 == 0)
+		usleep(1000);
+	while (is_dead(p) && is_eaten(p))
 	{
-		pthread_mutex_lock(&philo->sim->data);
-		philo->nb_times_eat++;
-		philo->last_meal = gettime(philo->sim);
-		pthread_mutex_unlock(&philo->sim->data);
-		ft_sleep(philo->sim->time_to_eat);
+		if (eat(p))
+			return (NULL);
+		if (print_line(p, "is sleeping"))
+			return (NULL);
+		else
+			ft_sleep(p->sim->time_to_sleep, p->sim->nb_philo);
+		if (print_line(p, "is thinking"))
+			return (NULL);
 	}
-	pthread_mutex_unlock(philo->fork_right);
-	pthread_mutex_unlock(philo->fork_left);
-}
-
-void *run(void *arg)
-{
-	pthread_mutex_lock(&(((t_philo *)arg)->sim->dead));
-	// while (((t_philo *)arg)->sim->dead_philo == 0)
-	while (((t_philo *)arg)->sim->dead_philo == 0 &&
-		   ((t_philo *)arg)->sim->nbr_times_eat != ((t_philo *)arg)->nb_times_eat)
-	{
-		pthread_mutex_unlock(&(((t_philo *)arg)->sim->dead));
-		eat(arg);
-		if (!print_line(arg, "is sleeping"))
-			ft_sleep(((t_philo *)arg)->sim->time_to_sleep);
-		print_line(arg, "is thinking");
-		pthread_mutex_lock(&(((t_philo *)arg)->sim->dead));
-	}
-	pthread_mutex_unlock(&(((t_philo *)arg)->sim->dead));
 	return (NULL);
 }
 
-void start(t_philo *philo)
+void	start(t_philo *philo)
 {
-	int i;
-	int nbr_philo;
+	int	i;
 
-	nbr_philo = philo->sim->nbr_philo;
+	philo->sim->time_start = getime();
 	i = -1;
-	if (nbr_philo == 1)
+	while (++i < philo->sim->nb_philo)
 	{
-		if (philo->sim->nbr_times_eat == 0)
-			return;
-		print_line(philo, "has a fork");
-		ft_sleep(philo->sim->time_to_die);
-		print_line(philo, "\033[0;31mdied");
-		return;
-	}
-	while (++i < nbr_philo)
-	{
-		philo[i].last_meal = 0;
-		pthread_create(&((philo + i)->thread), NULL, run, (philo + i));
-		// ft_sleep(10);
+		philo[i].last_meal = philo->sim->time_start;
+		pthread_create(&(philo[i].thread), NULL, &run, &philo[i]);
 	}
 }
 
-void end(t_philo *philo)
+void	end(t_philo *philo)
 {
-	int i;
-	int nbr_philo;
+	int	i;
 
-	nbr_philo = philo->sim->nbr_philo;
 	i = -1;
-	while (++i < nbr_philo)
-	{
-		pthread_join(((philo + i)->thread), NULL);
-	}
-	sem_destroy(&(sim->forks);
-	sem_destroy(&(sim->dead);
-	sem_destroy(&(sim->data);
+	while (++i < philo->sim->nb_philo)
+		pthread_join(philo[i].thread, NULL);
+	free(philo->sim->forks);
 	free(philo->sim);
 	free(philo);
-}
-
-void ft_sleep(int time)
-{
-	int timenow = getrealtime();
-	while (timenow + time > getrealtime())
-	{
-		usleep(100);
-	}
-}
-
-int getrealtime()
-{
-	struct timeval tv;
-
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }

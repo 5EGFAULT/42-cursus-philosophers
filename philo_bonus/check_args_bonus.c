@@ -6,13 +6,13 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/01 16:38:00 by marvin            #+#    #+#             */
-/*   Updated: 2022/06/08 23:15:01 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/15 02:01:26 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-static long check_ft_atoi_inter(int *sign, long nbr, char c)
+static long	check_ft_atoi_inter(int *sign, long nbr, char c)
 {
 	nbr = nbr * 10 + c - '0';
 	if (nbr > 2147483648)
@@ -22,11 +22,11 @@ static long check_ft_atoi_inter(int *sign, long nbr, char c)
 	return (nbr);
 }
 
-int ft_atoi_error(const char *str)
+int	ft_atoi_error(const char *str)
 {
-	int i;
-	long nbr;
-	int sign;
+	int		i;
+	long	nbr;
+	int		sign;
 
 	i = 0;
 	sign = 1;
@@ -49,21 +49,19 @@ int ft_atoi_error(const char *str)
 	return (-1);
 }
 
-int check_arg(int argc, char **argv)
+int	check_arg(int argc, char **argv)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (++i < argc)
 	{
 		if (ft_atoi_error(argv[i]) < 0)
 			return (printf("philo params error.\nUsage: params must be \
-positive integers\n"),
-					0);
+positive integers\n"), 0);
 	}
 	if (ft_atoi_error(argv[1]) <= 0)
 		return (printf("philo params error.\nUsage: Nbr Philos must be \
-integer bigger than 0\n"),
-				0);
+integer bigger than 0\n"), 0);
 	return (1);
 }
