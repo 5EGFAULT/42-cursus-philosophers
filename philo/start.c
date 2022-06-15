@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:09:06 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/15 01:46:13 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/15 01:56:44 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	*run(void *philo)
 	t_philo	*p;
 
 	p = (t_philo *)philo;
-	if (p->id % 2)
+	if (p->id % 2 == 0)
 		usleep(1000);
 	while (is_dead(p) && is_eaten(p))
 	{

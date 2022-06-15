@@ -1,4 +1,4 @@
-make --dry-run --always-make --keep-going --print-directory
+make --dry-run --keep-going --print-directory
 make: Entering directory `/Users/asouinia/Desktop/42-cursus-philosophers'
 make: Leaving directory `/Users/asouinia/Desktop/42-cursus-philosophers'
  
