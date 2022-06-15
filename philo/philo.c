@@ -30,8 +30,7 @@ int	main(int argc, char **argv)
 	if (!philos)
 		return (3);
 	start(philos);
-	if (watch(philos) == 1)
-		return (0);
+	watch(philos);
 	return (0);
 }
 
