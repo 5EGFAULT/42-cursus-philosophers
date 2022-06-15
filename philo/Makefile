@@ -4,6 +4,7 @@ OBJ			:= $(patsubst %.c, %.o, $(SRC))
 CC			:= gcc
 FLAGS		:= -Wall -Wextra -Werror -pthread
 .PHONY: all clean fclean re bonus
+
 all: $(NAME)
 $(NAME): $(OBJ)
 	@$(CC)  $(FLAGS)  $(OBJ) -o $(NAME) 
@@ -17,5 +18,3 @@ fclean: clean
 	@rm -f $(NAME)
 
 re: fclean all
-
-bonus:

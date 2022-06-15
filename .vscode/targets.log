@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Wed Jun 15 02:00:51 2022
+# Make data base, printed on Wed Jun 15 05:35:43 2022
 
 # Variables
 
@@ -39,13 +39,15 @@ MAKEFILE_LIST :=
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n0000jyr0004gp/T/vscode-ipc-cd34f5e0-4e41-4378-a719-62773c0ff86c.sock
+INFOPATH = /goinfre/asouinia/homebrew/share/info:
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n0000jyr0004gp/T/vscode-ipc-25801fbd-eb79-4463-a195-45f112493e64.sock
 # environment
 VSCODE_CWD = /
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.cuwCVTOBH1/Render
+Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.jO7xnsVnge/Render
 # environment
-PATH = /Users/asouinia/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/asouinia/goinfre/Web/node/bin:/Users/asouinia/goinfre/Web/npm-global/bin
+PATH = /Users/asouinia/.brew/bin:/goinfre/asouinia/homebrew/bin:/goinfre/asouinia/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/asouinia/goinfre/Web/node/bin:/Users/asouinia/goinfre/Web/npm-global/bin
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
@@ -55,7 +57,7 @@ ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.fhwrQzTdHT/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.ceXP3qIogc/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -65,7 +67,11 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /Users/asouinia/Desktop/42-cursus-philosophers
 # environment
+HOMEBREW_CELLAR = /goinfre/asouinia/homebrew/Cellar
+# environment
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# environment
+MANPATH = /goinfre/asouinia/homebrew/share/man::
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -121,13 +127,19 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.microsoft.VSCode.3508
+XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000005.Electron
+# environment
+HOMEBREW_PREFIX = /goinfre/asouinia/homebrew
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
 +F = $(notdir $+)
 # environment
+HOMEBREW_REPOSITORY = /goinfre/asouinia/homebrew
+# environment
 __CF_USER_TEXT_ENCODING = 0x11F6:0x0:0x0
+# environment
+COMMAND_MODE = unix2003
 # default
 MAKEFILES := 
 # automatic
@@ -136,6 +148,8 @@ MAKEFILES :=
 PAGER = less
 # environment
 LC_ALL = C
+# environment
+SECURITYSESSIONID = 186c2
 # automatic
 ^F = $(notdir $^)
 # default
@@ -147,9 +161,9 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 3676
+VSCODE_PID = 6911
 # variable set hash-table stats:
-# Load=67/1024=7%, Rehash=0, Collisions=1/88=1%
+# Load=74/1024=7%, Rehash=0, Collisions=1/95=1%
 
 # Pattern-specific Variable Values
 
@@ -218,7 +232,6 @@ GNUmakefile:
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
- 
 # files hash-table stats:
 # Load=6/1024=1%, Rehash=0, Collisions=0/17=0%
 # VPATH Search Paths
@@ -232,6 +245,6 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Wed Jun 15 02:00:51 2022
+# Finished Make data base on Wed Jun 15 05:35:43 2022
 
  

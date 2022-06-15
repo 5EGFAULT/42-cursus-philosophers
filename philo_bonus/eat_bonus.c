@@ -6,49 +6,34 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 17:20:31 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/15 02:01:23 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/15 06:06:38 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-int	take_fork(t_philo *philo)
+int take_fork(t_philo *philo)
 {
-	if (pthread_mutex_lock(philo->lfork))
-	{
-		philo->error = 0;
-		return (1);
-	}
-	if (print_line(philo, "has taken a fork"))
-		return (1);
-	if (pthread_mutex_lock(philo->rfork))
-	{
-		philo->error = 0;
-		return (1);
-	}
-	if (print_line(philo, "has taken a fork"))
-		return (1);
+	sem_wait(philo->sim->forks);
+	print_line(philo, "has taken a fork");
+	sem_wait(philo->sim->forks);
+	print_line(philo, "has taken a fork");
 	return (0);
 }
 
-int	leave_fork(t_philo *philo)
+int leave_fork(t_philo *philo)
 {
-	pthread_mutex_unlock(philo->lfork);
-	pthread_mutex_unlock(philo->rfork);
+	sem_post(philo->sim->forks);
+	sem_post(philo->sim->forks);
 	return (0);
 }
 
-int	eat(t_philo *philo)
+int eat(t_philo *philo)
 {
-	if (take_fork(philo))
-		return (1);
-	if (print_line(philo, "is eating"))
-		return (1);
-	if (pthread_mutex_lock(&(philo->sim->data)))
-		return (1);
-	philo->nb_times_eat++;
+	take_fork(philo);
+	print_line(philo, "is eating");
+	++(philo->nb_times_eat);
 	philo->last_meal = getime();
-	pthread_mutex_unlock(&(philo->sim->data));
 	ft_sleep(philo->sim->time_to_eat, philo->sim->nb_philo);
 	leave_fork(philo);
 	return (0);
