@@ -21,6 +21,8 @@
 #include <sys/time.h>
 #include <errno.h>
 #include <signal.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 typedef struct s_sim
 {

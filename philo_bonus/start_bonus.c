@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:09:06 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/15 06:20:14 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/15 11:27:23 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void *run(void *philo)
 	t_philo *p;
 
 	p = (t_philo *)philo;
-	printf("%d\n", p->id);
 	while (is_eaten(p))
 	{
 		eat(p);
@@ -50,6 +49,8 @@ void start(t_philo *philo)
 		philo[i].p_id = fork();
 		if (philo[i].p_id == 0)
 		{
+			philo[i].sim->dead = sem_open("../dead_sem", O_RDONLY);
+			philo[i].sim->forks = sem_open("../fork_sem", O_RDONLY);
 			pthread_create(&(philo[i].thread), NULL, &run, philo + i);
 			watch(philo + i);
 		}
@@ -65,13 +66,12 @@ void start(t_philo *philo)
 			break;
 		}
 	}
-	printf("%s\n", k ? "Error" : "Success");
 	if (k)
 	{
 		i = -1;
 		while (++i < philo->sim->nb_philo)
-		{
 			kill(philo[i].p_id, SIGKILL);
-		}
 	}
+	sem_unlink("../dead_sem");
+	sem_unlink("../fork_sem");
 }

@@ -6,7 +6,7 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:01:41 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/15 05:11:39 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/15 11:26:18 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ t_sim *init_sim(int argc, char **argv)
 		sim->nbr_times_eat = ft_atoi(argv[5]);
 	else
 		sim->nbr_times_eat = -1;
-	sim->dead = sem_open("dead_sem", 1, 1);
-	sim->forks = sem_open("fork_sem", 1, sim->nb_philo);
+	sim->dead = sem_open("../dead_sem", O_CREAT, 0644, 1);
+	sim->forks = sem_open("../fork_sem", O_CREAT, 0644, sim->nb_philo);
 	return (sim);
 }
 
