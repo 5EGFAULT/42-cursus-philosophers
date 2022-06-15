@@ -12,16 +12,15 @@
 
 #include "philo_bonus.h"
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_sim *sim;
-	t_philo *philos;
+	t_sim	*sim;
+	t_philo	*philos;
 
 	if (argc < 5 || argc > 6)
 		return (printf("philo params error.\nUsage: ./philo \
 <number of philosophers> <time to eat> <time to sleep> <time to die> \
-[number of times each philosopher must eat]\n"),
-				2);
+[number of times each philosopher must eat]\n"), 2);
 	if (!check_arg(argc, argv))
 		return (2);
 	sim = init_sim(argc, argv);
@@ -31,11 +30,10 @@ int main(int argc, char **argv)
 	if (!philos)
 		return (3);
 	start(philos);
-	// watch(philos);
 	return (0);
 }
 
-int watch(t_philo *philo)
+int	watch(t_philo *philo)
 {
 	while (1)
 	{
@@ -44,9 +42,11 @@ int watch(t_philo *philo)
 		if (getime() - philo->last_meal >= philo->sim->time_to_die)
 		{
 			sem_wait(philo->sim->dead);
-			printf("%d\t%d\t %s\n", getime() - philo->sim->time_start, philo->id, "died");
+			printf("%d\t%d\t %s\n", getime() - philo->sim->time_start, \
+			philo->id, "died");
 			exit(2);
 		}
+		usleep(1000);
 	}
 	return (0);
 }

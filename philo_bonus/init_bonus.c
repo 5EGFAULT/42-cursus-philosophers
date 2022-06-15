@@ -6,15 +6,15 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:01:41 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/15 11:26:18 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/15 22:31:01 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-t_sim *init_sim(int argc, char **argv)
+t_sim	*init_sim(int argc, char **argv)
 {
-	t_sim *sim;
+	t_sim	*sim;
 
 	sim = (t_sim *)malloc(sizeof(t_sim));
 	if (!sim)
@@ -28,15 +28,17 @@ t_sim *init_sim(int argc, char **argv)
 		sim->nbr_times_eat = ft_atoi(argv[5]);
 	else
 		sim->nbr_times_eat = -1;
-	sim->dead = sem_open("../dead_sem", O_CREAT, 0644, 1);
-	sim->forks = sem_open("../fork_sem", O_CREAT, 0644, sim->nb_philo);
+	sem_unlink("/dead_sem");
+	sem_unlink("/fork_sem");
+	sim->dead = sem_open("/dead_sem", O_CREAT, 0644, 1);
+	sim->forks = sem_open("/fork_sem", O_CREAT, 0644, sim->nb_philo);
 	return (sim);
 }
 
-t_philo *init_philo(int nbr_philo, t_sim *sim)
+t_philo	*init_philo(int nbr_philo, t_sim *sim)
 {
-	t_philo *philo;
-	int i;
+	t_philo	*philo;
+	int		i;
 
 	philo = (t_philo *)malloc(sizeof(t_philo) * nbr_philo);
 	if (!philo)

@@ -6,13 +6,13 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 17:20:31 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/15 06:06:38 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/15 22:31:12 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-int take_fork(t_philo *philo)
+int	take_fork(t_philo *philo)
 {
 	sem_wait(philo->sim->forks);
 	print_line(philo, "has taken a fork");
@@ -21,14 +21,14 @@ int take_fork(t_philo *philo)
 	return (0);
 }
 
-int leave_fork(t_philo *philo)
+int	leave_fork(t_philo *philo)
 {
 	sem_post(philo->sim->forks);
 	sem_post(philo->sim->forks);
 	return (0);
 }
 
-int eat(t_philo *philo)
+int	eat(t_philo *philo)
 {
 	take_fork(philo);
 	print_line(philo, "is eating");

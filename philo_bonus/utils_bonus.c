@@ -6,23 +6,23 @@
 /*   By: asouinia <asouinia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 14:52:33 by asouinia          #+#    #+#             */
-/*   Updated: 2022/06/15 05:12:18 by asouinia         ###   ########.fr       */
+/*   Updated: 2022/06/15 22:31:54 by asouinia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-int getime(void)
+int	getime(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-void ft_sleep(int time, int nbr_philo)
+void	ft_sleep(int time, int nbr_philo)
 {
-	size_t i;
+	size_t	i;
 
 	i = getime();
 	while (getime() - i < (size_t)time)
@@ -34,11 +34,11 @@ void ft_sleep(int time, int nbr_philo)
 	}
 }
 
-int ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
-	int i;
-	int nbr;
-	int sign;
+	int	i;
+	int	nbr;
+	int	sign;
 
 	i = 0;
 	sign = 1;
@@ -54,7 +54,7 @@ int ft_atoi(const char *str)
 	return (sign * nbr);
 }
 
-int print_line(t_philo *philo, char *str)
+int	print_line(t_philo *philo, char *str)
 {
 	if (sem_wait(philo->sim->dead))
 		return (1);
