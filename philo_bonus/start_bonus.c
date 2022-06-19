@@ -25,6 +25,8 @@ void	*run(void *philo)
 	t_philo	*p;
 
 	p = (t_philo *)philo;
+	if (p->id % 2 == 0)
+		usleep(60);
 	while (is_eaten(p))
 	{
 		eat(p);
@@ -42,7 +44,7 @@ void	start(t_philo *philo)
 	philo->sim->time_start = getime();
 	i = -1;
 	while (++i < philo->sim->nb_philo)
-	{
+	{	
 		philo[i].last_meal = philo->sim->time_start;
 		philo[i].p_id = fork();
 		if (philo[i].p_id == 0)
@@ -50,7 +52,6 @@ void	start(t_philo *philo)
 			pthread_create(&(philo[i].thread), NULL, &run, philo + i);
 			watch(philo + i);
 		}
-		usleep(60);
 	}
 	end(philo);
 }
