@@ -38,8 +38,6 @@ void	*run(void *philo)
 void	start(t_philo *philo)
 {
 	int	i;
-	int	status;
-	int	k;
 
 	philo->sim->time_start = getime();
 	i = -1;
@@ -53,6 +51,15 @@ void	start(t_philo *philo)
 			watch(philo + i);
 		}
 	}
+	end(philo);
+}
+
+void	end(t_philo *philo)
+{
+	int	i;
+	int	status;
+	int	k;
+
 	i = -1;
 	k = 0;
 	while (++i < philo->sim->nb_philo)

@@ -23,6 +23,7 @@
 # include <signal.h>
 # include <fcntl.h>
 # include <sys/stat.h>
+# include <stdatomic.h>
 
 typedef struct s_sim
 {
@@ -42,8 +43,8 @@ typedef struct s_philo
 	t_sim		*sim;
 	pthread_t	thread;
 	int			id;
-	_Atomic int	last_meal;
-	_Atomic int	nb_times_eat;
+	atomic_int	last_meal;
+	atomic_int	nb_times_eat;
 }t_philo;
 
 void	ft_sleep(int time, int nbr_philo);
