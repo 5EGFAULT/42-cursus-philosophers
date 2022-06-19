@@ -49,6 +49,16 @@ int	ft_atoi_error(const char *str)
 	return (-1);
 }
 
+int	ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str && str[i++])
+		;
+	return (i);
+}
+
 int	check_arg(int argc, char **argv)
 {
 	int	i;
@@ -56,7 +66,7 @@ int	check_arg(int argc, char **argv)
 	i = 0;
 	while (++i < argc)
 	{
-		if (ft_atoi_error(argv[i]) < 0)
+		if (ft_atoi_error(argv[i]) < 0 || ft_strlen(argv[i]) > 11)
 			return (printf("philo params error.\nUsage: params must be \
 positive integers\n"), 0);
 	}
