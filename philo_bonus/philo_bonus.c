@@ -37,16 +37,14 @@ int	watch(t_philo *philo)
 {
 	while (1)
 	{
-		if (philo->nb_times_eat == philo->sim->nbr_times_eat)
-			exit(0);
 		if (getime() - philo->last_meal >= philo->sim->time_to_die)
 		{
 			sem_wait(philo->sim->dead);
 			printf("%d\t%d\t %s\n", getime() - philo->sim->time_start, \
 			philo->id, "died");
-			exit(2);
+			exit(1);
 		}
-		usleep(1000);
+		usleep(100);
 	}
 	return (0);
 }

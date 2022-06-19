@@ -14,10 +14,10 @@
 
 int	is_eaten(t_philo *philo)
 {
-	if (philo->nb_times_eat != philo->sim->nbr_times_eat)
-		return (1);
-	else
+	if (philo->nb_times_eat == philo->sim->nbr_times_eat)
 		return (0);
+	else
+		return (1);
 }
 
 void	*run(void *philo)
@@ -32,7 +32,7 @@ void	*run(void *philo)
 		ft_sleep(p->sim->time_to_sleep, p->sim->nb_philo);
 		print_line(p, "is thinking");
 	}
-	return (NULL);
+	exit(0);
 }
 
 void	start(t_philo *philo)
@@ -50,6 +50,7 @@ void	start(t_philo *philo)
 			pthread_create(&(philo[i].thread), NULL, &run, philo + i);
 			watch(philo + i);
 		}
+		usleep(60);
 	}
 	end(philo);
 }
@@ -65,7 +66,7 @@ void	end(t_philo *philo)
 	while (++i < philo->sim->nb_philo)
 	{
 		waitpid(-1, &status, 0);
-		if (status != 256)
+		if (status != 0)
 		{
 			k = 1;
 			break ;
