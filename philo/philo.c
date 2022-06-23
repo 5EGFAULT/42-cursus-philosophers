@@ -66,7 +66,7 @@ int	check_all_eaten(t_philo *philo)
 		philo->sim->nbr_times_eat == -1)
 			return (pthread_mutex_unlock(&philo[i].sim->data), 1);
 	}
-	pthread_mutex_unlock(&philo[0].sim->data);
+	//pthread_mutex_unlock(&philo[0].sim->data);
 	destroy_mutexs(philo);
 	return (0);
 }
