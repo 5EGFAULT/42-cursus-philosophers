@@ -59,13 +59,15 @@ int	check_all_eaten(t_philo *philo)
 	int	i;
 
 	i = -1;
+	pthread_mutex_lock(&philo[0].sim->data);
 	while (++i < philo->sim->nb_philo)
 	{
-		pthread_mutex_lock(&philo[i].sim->data);
-		if (philo[i].nb_times_eat != philo->sim->nbr_times_eat)
+		if (philo[i].nb_times_eat < philo->sim->nbr_times_eat || \
+		philo->sim->nbr_times_eat == -1)
 			return (pthread_mutex_unlock(&philo[i].sim->data), 1);
-		pthread_mutex_unlock(&philo[i].sim->data);
 	}
+	pthread_mutex_unlock(&philo[0].sim->data);
+	destroy_mutexs(philo);
 	return (0);
 }
 
@@ -73,7 +75,7 @@ int	watch(t_philo *philo)
 {
 	int	i;
 
-	while (1)
+	while (check_all_eaten(philo))
 	{
 		i = -1;
 		while (++i < philo->sim->nb_philo)

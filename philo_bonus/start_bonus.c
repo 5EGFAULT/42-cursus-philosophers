@@ -30,9 +30,13 @@ void	*run(void *philo)
 	while (is_eaten(p))
 	{
 		eat(p);
-		print_line(p, "is sleeping");
-		ft_sleep(p->sim->time_to_sleep, p->sim->nb_philo);
-		print_line(p, "is thinking");
+		if (is_eaten(p))
+		{
+			print_line(p, "is sleeping");
+			ft_sleep(p->sim->time_to_sleep, p->sim->nb_philo);
+		}
+		if (is_eaten(p))
+			print_line(p, "is thinking");
 	}
 	exit(0);
 }

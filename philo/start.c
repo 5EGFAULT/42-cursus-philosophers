@@ -25,34 +25,20 @@ int	is_dead(t_philo *philo)
 	return (0);
 }
 
-int	is_eaten(t_philo *philo)
-{
-	int	r;
-
-	if (pthread_mutex_lock(&((t_philo *)philo)->sim->data))
-		return (0);
-	if (philo->nb_times_eat != philo->sim->nbr_times_eat)
-		r = 1;
-	else
-		r = 0;
-	pthread_mutex_unlock(&((t_philo *)philo)->sim->data);
-	return (r);
-}
-
 void	*run(void *philo)
 {
 	t_philo	*p;
 
 	p = (t_philo *)philo;
-	while (is_dead(p) && is_eaten(p))
+	while (is_dead(p))
 	{
-		if (eat(p))
+		if (check_all_eaten(p->all) && eat(p))
 			return (NULL);
-		if (print_line(p, "is sleeping"))
+		if (!check_all_eaten(p->all) && print_line(p, "is sleeping"))
 			return (NULL);
 		else
 			ft_sleep(p->sim->time_to_sleep, p->sim->nb_philo);
-		if (print_line(p, "is thinking"))
+		if (!check_all_eaten(p->all) && print_line(p, "is thinking"))
 			return (NULL);
 	}
 	return (NULL);

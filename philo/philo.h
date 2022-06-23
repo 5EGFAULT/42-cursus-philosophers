@@ -39,6 +39,7 @@ typedef struct s_philo
 	pthread_t		thread;
 	pthread_mutex_t	*lfork;
 	pthread_mutex_t	*rfork;
+	void			*all;
 	t_sim			*sim;
 	int				id;
 	int				last_meal;
@@ -62,5 +63,6 @@ int		leave_fork(t_philo *philo);
 int		eat(t_philo *philo);
 void	destroy_mutexs(t_philo *philo);
 int		watch(t_philo *philo);
+int		check_all_eaten(t_philo *philo);
 
 #endif

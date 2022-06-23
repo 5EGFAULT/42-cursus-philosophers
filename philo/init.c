@@ -58,6 +58,7 @@ t_philo	*init_philo(int nbr_philo, t_sim *sim)
 		philo[i].rfork = sim->forks + (i + 1) % nbr_philo;
 		philo[i].nb_times_eat = 0;
 		philo[i].error = 1;
+		philo[i].all = philo;
 	}
 	return (philo);
 }
